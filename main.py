@@ -60,7 +60,7 @@ def find_md_files_bw(directory, black_list, white_list):
     md_files_bw = []
     for root, directories, files in os.walk(directory):
         for file in files:
-            if (file.endswith(".md") or file.endswith(".markdown")) and not(file in black_list):
+            if (file.endswith(".md") or file.endswith(".markdown")) and (not(file in black_list) and (file in white_list)):
                 md_files_bw.append(os.path.join(root, file))
 
     return md_files_bw 
