@@ -1,5 +1,6 @@
 import os
 import pypandoc
+import subprocess
 
 def convert_markdown_files(white_list, black_list, input_directory, output_directory):
     for file in os.listdir(input_directory):
@@ -35,6 +36,12 @@ def find_md_files(directory):
         for file in files:
             if file.endswith(".md") or file.endswith(".markdown"):
                 md_files.append(os.path.join(root, file))
+                input_file = file
+                with open(input_file, 'r') as f:
+                    md_content = f.read()
+                html_content = pypandoc.convert_text(md_content, 'html', format = 'md')
+                with open(input_file, 'w') as f:
+                    f.write(html_content)
 
     return md_files 
 
@@ -64,3 +71,29 @@ def find_md_files_bw(directory, black_list, white_list):
                 md_files_bw.append(os.path.join(root, file))
 
     return md_files_bw 
+
+
+def convert_md_and_save_html(input_file):
+    with open(input_file, 'r') as file:
+        md_content = file.read()
+    html_content = pypandoc.convert_text(md_content, 'html', fomat = 'md')
+
+    with open(input_file, 'w') as file:
+        file.write(html_content)
+
+def get_git_files_from_repo(reposiroty_path):
+    git_cmd = ['git', 'ls-files']
+    output = subprocess.run(git_cmd, cwd = reposiroty_path, stdout = subprocess.PIPE, text = True)
+    git_files = output.stdout.splitlines()
+    return git_files
+
+def convert_md_files(white_list, black_list, input_repo_path):
+    git_files = get_git_files_from_repo(input_repo_path)
+    
+    for file in git_files:
+        if file.endswith(".md"):
+            if(not white_list and not black_list) or (black_list and file not in black_list) or (white_list and file in white_list):
+                file_path = os.path.join(input_repo_path, file)
+                convert_md_and_save_html(file_path)
+
+    
