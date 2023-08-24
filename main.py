@@ -1,3 +1,6 @@
+# This program converts markdown files to html while a git commit is happening and makes sure the html file is saved in the same repository.
+# There is a use of white lists and black lists to determine which markdown files to find in a repository.
+
 import os
 import pypandoc
 import subprocess
