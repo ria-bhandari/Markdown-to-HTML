@@ -30,5 +30,4 @@ if __name__ == "__main__":
     black_list = [...]
     input_repository_path = "..." # add repo path
 
-    convert_mdfile_to_html(white_list, black_list, input_repository_path
-    )
+    convert_mdfile_to_html(white_list, black_list, input_repository_path)
