@@ -17,10 +17,11 @@ def get_md_files(white_list, black_list, input_repository_path):
                 path_of_file = os.path.join(input_repository_path, file)
                 with open(path_of_file, 'r') as markdown_file:
                     md_content = markdown_file.read()
-                html_content = convert_mdfile_to_html(md_content)
+                html_content = convert_mdfile_to_html(path_of_file)
                 html_filepath = path_of_file.replace(".md", ".html")
                 with open(html_filepath, 'w') as html_file:
                     html_file.write(html_content)
+                add_html_file_to_git(html_filepath)
 
 def does_html_file_already_exist_and_committed(md_filepath):
     html_filepath = md_filepath.replace(".md", ".html")
@@ -38,9 +39,17 @@ def get_git_files_from_repository(repo_path):
     git_files = output.stdout.splitlines()
     return git_files
 
+def add_html_file_to_git(html_filepath):
+    git_add_cmd = ['git', 'add', html_filepath]
+    subprocess.rn(git_add_cmd, cwd=input_repository_path)
+
+def commit_htmlfile_to_git(html_filepath):
+    git_commit_cmd = ['git', 'commit', '-m', f'Add/Update the HTML file: {html_filepath}']
+    subprocess.rn(git_commit_cmd, cwd=input_repository_path)
+
 if __name__ == "__main__":
-    white_list = [...]
-    black_list = [...]
-    input_repository_path = "..." # add repo path
+    white_list = ["test1.md", "test2.md"]
+    black_list = ["test3.md"]
+    input_repository_path = "/Users/riab/Documents/Markdown-to-HTML/Test_files" 
 
     convert_mdfile_to_html(white_list, black_list, input_repository_path)
