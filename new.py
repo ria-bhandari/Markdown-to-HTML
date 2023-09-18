@@ -15,8 +15,7 @@ def get_md_files(white_list, black_list, input_repository_path):
         if file.endswith(".md"):
             if (not white_list and not black_list) or (black_list and file not in black_list) or (white_list and file in white_list):
                 path_of_file = os.path.join(input_repository_path, file)
-                with open(path_of_file, 'r') as markdown_file:
-                    md_content = markdown_file.read()
+                # Call the function for each Markdown file individually
                 html_content = convert_mdfile_to_html(path_of_file)
                 html_filepath = path_of_file.replace(".md", ".html")
                 with open(html_filepath, 'w') as html_file:
@@ -41,15 +40,30 @@ def get_git_files_from_repository(repo_path):
 
 def add_html_file_to_git(html_filepath):
     git_add_cmd = ['git', 'add', html_filepath]
-    subprocess.rn(git_add_cmd, cwd=input_repository_path)
+    subprocess.run(git_add_cmd, cwd=input_repository_path)
 
 def commit_htmlfile_to_git(html_filepath):
     git_commit_cmd = ['git', 'commit', '-m', f'Add/Update the HTML file: {html_filepath}']
-    subprocess.rn(git_commit_cmd, cwd=input_repository_path)
+    subprocess.run(git_commit_cmd, cwd=input_repository_path)
 
 if __name__ == "__main__":
     white_list = ["test1.md", "test2.md"]
     black_list = ["test3.md"]
     input_repository_path = "/Users/riab/Documents/Markdown-to-HTML/Test_files" 
+if __name__ == "__main__":
+    white_list = ["test1.md", "test2.md"]
+    black_list = ["test3.md"]
+    input_repository_path = "/Users/riab/Documents/Markdown-to-HTML/Test_files" 
 
-    convert_mdfile_to_html(white_list, black_list, input_repository_path)
+    git_files = get_git_files_from_repository(input_repository_path)
+
+    for file in git_files:
+        if file.endswith(".md"):
+            if (not white_list and not black_list) or (black_list and file not in black_list) or (white_list and file in white_list):
+                path_of_file = os.path.join(input_repository_path, file)
+                html_content = convert_mdfile_to_html(path_of_file)
+                html_filepath = path_of_file.replace(".md", ".html")
+                with open(html_filepath, 'w') as html_file:
+                    html_file.write(html_content)
+                add_html_file_to_git(html_filepath)
+                commit_htmlfile_to_git(html_filepath)
