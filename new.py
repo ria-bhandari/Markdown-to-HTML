@@ -46,20 +46,16 @@ def commit_htmlfile_to_git(html_filepath):
     git_commit_cmd = ['git', 'commit', '-m', f'Add/Update the HTML file: {html_filepath}']
     subprocess.run(git_commit_cmd, cwd=input_repository_path)
 
-if __name__ == "__main__":
-    white_list = ["test1.md", "test2.md"]
-    black_list = ["test3.md"]
-    input_repository_path = "/Users/riab/Documents/Markdown-to-HTML/Test_files" 
-if __name__ == "__main__":
-    white_list = ["test1.md", "test2.md"]
-    black_list = ["test3.md"]
-    input_repository_path = "/Users/riab/Documents/Markdown-to-HTML/Test_files" 
+# if __name__ == "__main__":
+#     white_list = ["test1.md", "test2.md"]
+#     black_list = ["test3.md"]
+#     input_repository_path = "/Users/riab/Documents/Markdown-to-HTML/Test_files" 
 
     git_files = get_git_files_from_repository(input_repository_path)
 
     for file in git_files:
         if file.endswith(".md"):
-            if (not white_list and not black_list) or (black_list and file not in black_list) or (white_list and file in white_list):
+            if (file not in black_list) or (file in white_list):
                 path_of_file = os.path.join(input_repository_path, file)
                 html_content = convert_mdfile_to_html(path_of_file)
                 html_filepath = path_of_file.replace(".md", ".html")
