@@ -10,6 +10,9 @@ This project aims to automate the conversion of Markdown files to an HTML format
 - Prevents the overwriting of already committed HTML files
 - Makes use of white and black lists to locate a certain Markdown file in a Git repository
 
+## How to use this code
+
+
 ## Technologies used
 
 - Python

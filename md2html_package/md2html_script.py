@@ -30,7 +30,7 @@ def convert_mdfile_to_html(input_file_path: str) -> str:
 def get_md_files(input_repository_path: str):
     white_list = read_list_folder_to_set('white_list_folder')
     black_list = read_list_folder_to_set('black_list_folder')
-    git_files = get_git_files_from_repo(input_repository_path)
+    git_files = get_git_files_from_the_repo(input_repository_path)
 
     for file in git_files:
         if file.endswith(" .md") and check_location_file(file, black_list, white_list):
@@ -43,14 +43,12 @@ def get_md_files(input_repository_path: str):
 def read_list_folder_to_set(foldername: str) -> Set[str]:
     fileset = set()
     path_of_folder = Path(foldername)
-    if path_of_folder.is_dir():
-        for name_of_file in path_of_folder.iterdir():
-            if name_of_file.is_file():
-                with open(name_of_file, 'r') as file:
-                    fileset.update(file.read().splitlines())
+    if path_of_folder.is_file():
+       with open(path_of_folder, 'r') as file:
+        fileset.update(file.read().splitlines())
     return fileset
 
-def get_git_files_from_the_repository(repository_path: str):
+def get_git_files_from_the_repo(repository_path: str):
     git_cmd = ['git', 'rev-parse', '--show-toplevel']
     output = subprocess.run(git_cmd, cwd=repository_path, stdout=subprocess.PIPE, text=True)
     if output.returncode == 0:
