@@ -1,2 +1,0 @@
-[console_scripts]
-md2html_script = md2html_package.md2html_script: get_md_files
