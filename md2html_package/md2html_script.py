@@ -3,6 +3,7 @@ import pypandoc
 import subprocess
 from typing import Set
 from pathlib import Path
+import fnmatch
 
 def check_location_file(file_name: str, black_list: Set[str], white_list: Set[str]) -> bool:
     """
@@ -62,10 +63,24 @@ def read_list_folder_to_set(foldername: str) -> Set[str]:
     """
     fileset = set()
     path_of_folder = Path(foldername)
-    if path_of_folder.is_file():
-       with open(path_of_folder, 'r') as file:
-        fileset.update(file.read().splitlines())
+    if path_of_folder.is_dir():
+        for filename in path_of_folder.iterdir():
+            if filename.is_file():
+                with open(filename, 'r') as file:
+                    file_lines = file.read().splitlines()
+                    for line in file_lines:
+                        if '*' in line or '?' in line:
+                            matched_files = [str(path) for path in path_of_folder.glob(line)]
+                            fileset.update(matched_files)
+                        else:
+                            fileset.add(line)
     return fileset
+
+
+    # if path_of_folder.is_file():
+    #    with open(path_of_folder, 'r') as file:
+    #     fileset.update(file.read().splitlines())
+    # return fileset
 
 def get_git_files_from_the_repo(repository_path: str):
     """
